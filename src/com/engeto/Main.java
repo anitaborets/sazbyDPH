@@ -13,15 +13,17 @@ public class Main {
         ListStateTax listStateTax = new ListStateTax();
 
         try {
-           listStateTax = ListStateTax.importFromFile(FILENAME);
+           listStateTax = listStateTax.importFromFile(FILENAME);
         } catch (TaxException e) {
            System.err.println("Nepodařilo se načíst data ze souboru "+FILENAME+": "+e.getMessage());
         }
 
-       ListStateTax.getBasicTax(listStateTax);
+       System.out.println(listStateTax);
+
+       listStateTax.getBasicTax(listStateTax);
 
         try {
-            getTaxFromUser(listStateTax);
+            listStateTax.getTaxFromUser(listStateTax);
         } catch (TaxException e) {
             e.printStackTrace();
         }

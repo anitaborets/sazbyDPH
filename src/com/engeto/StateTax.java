@@ -66,8 +66,8 @@ public class StateTax {
 
     @Override
     public String toString() {
-        return "Stat: " + state +
-                " zakladni sadzba=" + basicVAT + "%" +
-                '\n';
+        return "\b" + "\b" + stateFullName + " (" + state + "): "
+                 + basicVAT +  " %" + "\n";
+
     }
 }

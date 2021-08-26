@@ -39,14 +39,12 @@ public class ListStateTax  {
         catch (IndexOutOfBoundsException e){
             throw new TaxException("Problem vo vstupnom subore: ");}
 
-        System.out.println(listStateTax.toString());
-
         return listStateTax;
             }
 
 //Seradeni: státy, které mají základní sazbu DPH vyšší než 20 % + nepoužívají speciální sazbu daně.
 // Dalej: státy, které ve výpisu nefigurují.
-        public static List getBasicTax (ListStateTax listStateTax) {
+        public List getBasicTax (ListStateTax listStateTax) {
         List<StateTax> stateTaxes = new ArrayList<>();
         for (StateTax stateTax : listStateTax.listState) {
 
@@ -57,6 +55,7 @@ public class ListStateTax  {
         Comparator tax = new StateTaxComparator();
         Collections.sort(stateTaxes, tax);
 
+
         //vypis na obrazovku - volame metod
         printConsole(stateTaxes, listStateTax);
 
@@ -66,32 +65,42 @@ public class ListStateTax  {
             } catch (TaxException e) {
                 e.printStackTrace();
             }
+
             return stateTaxes;
     }
 
     //vypis na obrazovku
-    public static void printConsole(List stateTaxes, ListStateTax listStateTax) {
+    public void printConsole(List stateTaxes, ListStateTax listStateTax) {
         System.out.println("Státy, které mají základní sazbu DPH vyšší než 20 % a nepoužívají speciální sazbu daně");
         System.out.println(stateTaxes);
+
         System.out.println("===========================");
         System.out.println("Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ");
+
         for (StateTax stateTax : listStateTax.listState) {
             if ((stateTax.basicVAT < 20) || (stateTax.parkingVAT == true)) {
-                System.out.println(stateTax.state);
-            }
-        }
+                System.out.print(stateTax.state + ", ");
+                            }
+                    }
+        System.out.println(" ");
     }
 
     //ulozit do suboru
-    public static void exportToFile(String fileName, List stateTaxes, ListStateTax listStateTax) throws TaxException{
+    public void exportToFile(String fileName, List stateTaxes, ListStateTax listStateTax) throws TaxException{
             try (PrintWriter writer = new PrintWriter(new FileOutputStream(fileName))){
-                writer.println("Státy, které mají základní sazbu DPH vyšší než 20 % a nepoužívají speciální sazbu daně");
-                writer.println(stateTaxes);
+                writer.println("Státy, které mají základní sazbu DPH vyšší než 20 % a nepoužívají speciální sazbu daně:");
+                List<StateTax> stateTaxes1 = new ArrayList<>();
+                stateTaxes1 = List.copyOf(stateTaxes);
+                for (StateTax stateTax : stateTaxes1) {
+                    writer.println(stateTax.stateFullName + " (" + stateTax.state + "): "
+                            + stateTax.basicVAT +  " %");
+                }
+                
                 writer.println("===========================");
                 writer.println("Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ");
                 for (StateTax stateTax : listStateTax.listState) {
                      if ((stateTax.basicVAT < 20) || (stateTax.parkingVAT == true)) {
-                        writer.println(stateTax.state);
+                        writer.print(stateTax.state+ ", ");
                     }
                 }
 
@@ -101,10 +110,11 @@ public class ListStateTax  {
             }
 
     //uživatel zadava sazbu DPH, podla ktorej filtrujeme. Pokud zmáčkne Enter, výchozí hodnota je 20 %.
-    public static void getTaxFromUser(ListStateTax listStateTax) throws TaxException{
+    public void getTaxFromUser(ListStateTax listStateTax) throws TaxException{
         int taxe;
         String line;
-        System.out.println("Zadajte zakladni sadzbu VAT");
+        System.out.println("===========================");
+        System.out.println("Zadajte zakladni sadzbu VAT:");
         Scanner console = new Scanner(System.in);
 
     try {
@@ -119,7 +129,7 @@ public class ListStateTax  {
     System.out.println("Státy se základní sazbou vyšší než: " + taxe);
     for (StateTax stateTax : listStateTax.listState) {
         if (stateTax.basicVAT > taxe) {
-            System.out.println(stateTax.state);
+            System.out.println(stateTax.stateFullName + " (" + stateTax.state + "): " + stateTax.basicVAT + " %");
         }
     }
 //ulozit do suboru - volame metod
@@ -127,14 +137,14 @@ public class ListStateTax  {
 }
 
 //ulozit do suboru podla parametrov uzivatela
-    public static void exportToFileForUser(int taxe, ListStateTax listStateTax) throws TaxException{
+    public void exportToFileForUser(int taxe, ListStateTax listStateTax) throws TaxException{
         String fileName;
         fileName = "vat-over-" + taxe + ".txt";
         try (PrintWriter writer = new PrintWriter(new FileOutputStream(fileName))){
             writer.println("Státy se základní sazbou vyšší než: " + taxe);
             for (StateTax stateTax : listStateTax.listState) {
                 if (stateTax.basicVAT > taxe) {
-                    writer.println(stateTax.state);
+                    writer.println(stateTax.stateFullName + " (" + stateTax.state + "): " + stateTax.basicVAT + " %");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -142,8 +152,8 @@ public class ListStateTax  {
         }
     }
 
-    @Override
-    public String toString() {
+   @Override
+   public String toString() {
         return "Zakladné sadzby DPH:" + '\n' + listState;
     }
 }
