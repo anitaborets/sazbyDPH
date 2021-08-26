@@ -1,12 +1,4 @@
-# sazbyDPH
-První projekt — Sazby DPH
-Na prvním projektu byste si měli ověřit, že jste zvládli témata prvních šesti lekcí.
-K projektu nebudete mít vzorové řešení.
-Vaše řešení byste měli odevzdat v repozitáři, který si pro tento účel vytvoříte.
-Zadání
-Naprogramuj aplikaci v Javě, která vypíše všechny státy Evropské unie, které mají sazbu daně z přidané hodnoty (DPH, VAT) vyšší, než 20 % a nepoužívají speciální sazbu DPH/VAT.
-Aktuální data o jednotlivých státech a jejich daních dostaneš v souboru — vzorový soubor je ke stažení zde: vat-eu.csv.
-Vstupní soubor bude ve stejné složce, jako projekt aplikace.
+
 Formát vstupního souboru
 Na každém řádku vstupního souboru jsou informace o jednom státu v následujícím formátu:
 •	zkratka státu (například AT)
